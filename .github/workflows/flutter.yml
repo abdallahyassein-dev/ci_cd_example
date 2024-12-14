@@ -37,39 +37,27 @@ jobs:
       - name: Install Firebase CLI
         run: |
           curl -sL https://firebase.tools | bash
-          firebase --version  # Ensure that Firebase CLI is installed successfully
+          firebase --version  # Ensure Firebase CLI is installed
 
-      - name: Debug - Check Firebase Service Account Secret
+      - name: Debug - Check Service Account Key
         run: |
-          echo "Checking if service account key secret is set correctly"
-          echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" | head -n 10  # Avoid printing sensitive content
+          echo "Checking Firebase Service Account Key..."
+          echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}" | head -n 10  # Avoid printing entire key
+          echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}" > /tmp/firebase-service-account.json
+          ls -l /tmp/firebase-service-account.json  # Check file exists
+          cat /tmp/firebase-service-account.json  # Ensure file content is correct
 
-      - name: Write Firebase Service Account JSON to File
-        run: |
-          echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" > /tmp/firebase-service-account.json
-          ls -l /tmp/firebase-service-account.json  # Check if file exists
-
-      - name: Set up Firebase Authentication
+      - name: Set GOOGLE_APPLICATION_CREDENTIALS and Run Firebase Commands
         run: |
           export GOOGLE_APPLICATION_CREDENTIALS="/tmp/firebase-service-account.json"
-          firebase --token ${{ secrets.FIREBASE_AUTH_TOKEN }}  # Ensure you're passing a valid token
-
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_APPLICATION_CREDENTIALS"
+          firebase --token ${{ secrets.FIREBASE_AUTH_TOKEN }}  # Ensure valid token is being used
 
       - name: Build APK
         run: flutter build apk --release
 
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v3
-        with:
-          name: release-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
-        
-
-
-
-      # Step 8: Deploy APK to Firebase App Distribution
       - name: Deploy to Firebase App Distribution
         run: |
           firebase appdistribution:distribute build/app/outputs/flutter-apk/app-release.apk \
-            --app 1:937281614957:android:7e8c8babbb470098e0bb64
+            --app <your-app-id> \
+            --groups "testers"
