@@ -34,18 +34,26 @@ jobs:
       - name: Run Our Test
         run: flutter test
 
-      # Step 6: Install Firebase CLI
       - name: Install Firebase CLI
         run: |
           curl -sL https://firebase.tools | bash
-          firebase --version  # Check Firebase CLI installation
+          firebase --version  # Ensure that Firebase CLI is installed successfully
+
+      - name: Debug - Check Firebase Service Account Secret
+        run: |
+          echo "Checking if service account key secret is set correctly"
+          echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" | head -n 10  # Avoid printing sensitive content
+
+      - name: Write Firebase Service Account JSON to File
+        run: |
+          echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" > /tmp/firebase-service-account.json
+          ls -l /tmp/firebase-service-account.json  # Check if file exists
 
       - name: Set up Firebase Authentication
         run: |
-            echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" > /tmp/firebase-service-account.json
-            export GOOGLE_APPLICATION_CREDENTIALS="/tmp/firebase-service-account.json"
-            firebase --token ${{ secrets.FIREBASE_AUTH_TOKEN }} # Optional if you use a CI token
-  
+          export GOOGLE_APPLICATION_CREDENTIALS="/tmp/firebase-service-account.json"
+          firebase --token ${{ secrets.FIREBASE_AUTH_TOKEN }}  # Ensure you're passing a valid token
+
 
       - name: Build APK
         run: flutter build apk --release
