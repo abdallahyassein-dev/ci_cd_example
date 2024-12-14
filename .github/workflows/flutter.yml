@@ -52,8 +52,14 @@ jobs:
           firebase --version  # Check Firebase CLI installation
 
       # Step 7: Deploy APK to Firebase App Distribution
+      # Step 7: Set Up GOOGLE_APPLICATION_CREDENTIALS
+      - name: Set up Service Account Credentials
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/firebase-key.json
+        run: echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" > $GOOGLE_APPLICATION_CREDENTIALS
+
+      # Step 8: Deploy APK to Firebase App Distribution
       - name: Deploy to Firebase App Distribution
         run: |
           firebase appdistribution:distribute build/app/outputs/flutter-apk/app-release.apk \
-            --app 1:937281614957:android:7e8c8babbb470098e0bb64 \
-            --token ${{secrets.FIREBASE_AUTH_TOKEN}}
+            --app 1:937281614957:android:7e8c8babbb470098e0bb64
