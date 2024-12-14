@@ -9,7 +9,7 @@ class Counter {
 }
 
 void main() {
-  test('Counter value should increment ', () {
+  test('Counter value should increment', () {
     final counter = Counter();
 
     counter.increment();
