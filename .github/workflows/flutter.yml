@@ -51,9 +51,9 @@ jobs:
           curl -sL https://firebase.tools | bash
           firebase --version  # Check Firebase CLI installation
 
-      # Step 7: Deploy APK to Firebase App Distribution
-      # Step 7: Set Up GOOGLE_APPLICATION_CREDENTIALS
-      - name: Set up Service Account Credentials
+ 
+      # Step 7: Set up Firebase Authentication
+      - name: Set up Firebase Authentication
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/firebase-key.json
         run: echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" > $GOOGLE_APPLICATION_CREDENTIALS
