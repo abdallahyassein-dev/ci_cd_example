@@ -34,6 +34,12 @@ jobs:
       - name: Run Our Test
         run: flutter test
 
+      # Step 6: Install Firebase CLI
+      - name: Install Firebase CLI
+        run: |
+          curl -sL https://firebase.tools | bash
+          firebase --version  # Check Firebase CLI installation
+
       - name: Authenticate with Firebase using Service Account Key
         env:
           GOOGLE_APPLICATION_CREDENTIALS: /tmp/firebase-service-account.json
@@ -53,18 +59,7 @@ jobs:
           path: build/app/outputs/flutter-apk/app-release.apk
         
 
-      # Step 6: Install Firebase CLI
-      - name: Install Firebase CLI
-        run: |
-          curl -sL https://firebase.tools | bash
-          firebase --version  # Check Firebase CLI installation
 
- 
-      # Step 7: Set up Firebase Authentication
-      - name: Set up Firebase Authentication
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/firebase-key.json
-        run: echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" > $GOOGLE_APPLICATION_CREDENTIALS
 
       # Step 8: Deploy APK to Firebase App Distribution
       - name: Deploy to Firebase App Distribution
