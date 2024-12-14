@@ -55,5 +55,5 @@ jobs:
       - name: Deploy to Firebase App Distribution
         run: |
           firebase appdistribution:distribute build/app/outputs/flutter-apk/app-release.apk \
-            --app testsignin-1a319 \
-            --token ${{ secrets.FIREBASE_AUTH_TOKEN }}
+            --app 1:937281614957:android:7e8c8babbb470098e0bb64 \
+            --token ${{secrets.FIREBASE_AUTH_TOKEN}}
