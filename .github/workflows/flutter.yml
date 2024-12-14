@@ -43,4 +43,10 @@ jobs:
         with:
           name: release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
-      
+        
+
+      # Step 6: Upload APK to Firebase
+      - name: Deploy to Firebase App Distribution
+        run: firebase appdistribution:distribute build/app/outputs/flutter-apk/app-release.apk \
+              --app testsignin-1a319 \
+              --token ${{ secrets.FIREBASE_AUTH_TOKEN }}
