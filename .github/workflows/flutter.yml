@@ -39,25 +39,29 @@ jobs:
           curl -sL https://firebase.tools | bash
           firebase --version  # Ensure Firebase CLI is installed
 
-      - name: Debug - Check Service Account Key
+      - name: Verify Firebase Service Account File
         run: |
-          echo "Checking Firebase Service Account Key..."
-          echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" | head -n 10  # Avoid printing entire key
-          echo "${{ secrets.FIREBASE_AUTH_TOKEN }}" > /tmp/firebase-service-account.json
-          ls -l /tmp/firebase-service-account.json  # Check file exists
-          cat /tmp/firebase-service-account.json  # Ensure file content is correct
-
-      - name: Set GOOGLE_APPLICATION_CREDENTIALS and Run Firebase Commands
+            echo "Checking Firebase Service Account Key..."
+            echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}" > /tmp/firebase-service-account.json
+            ls -l /tmp/firebase-service-account.json  # Check file permissions
+            cat /tmp/firebase-service-account.json    # Ensure file content is correct
+  
+      - name: Check if Firebase Auth Token is Set
         run: |
-          export GOOGLE_APPLICATION_CREDENTIALS="/tmp/firebase-service-account.json"
-          echo "GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_APPLICATION_CREDENTIALS"
-          firebase --token ${{ secrets.FIREBASE_AUTH_TOKEN }}  # Ensure valid token is being used
-
-      - name: Build APK
-        run: flutter build apk --release
-
-      - name: Deploy to Firebase App Distribution
+             if [ -z "${{ secrets.FIREBASE_AUTH_TOKEN }}" ]; then
+                echo "Firebase Auth Token is not set!"
+              else
+                echo "Firebase Auth Token is set."
+              fi
+      - name: Authenticate Firebase CLI
         run: |
-          firebase appdistribution:distribute build/app/outputs/flutter-apk/app-release.apk \
-            --app <your-app-id> \
-            --groups "testers"
+            export GOOGLE_APPLICATION_CREDENTIALS="/tmp/firebase-service-account.json"
+            firebase auth:use --token ${{ secrets.FIREBASE_AUTH_TOKEN }}  # Authenticate manually
+  
+      - name: Check Firebase Authentication
+        run: |
+            firebase projects:list  # Check if Firebase authentication works
+  
+      - name: Firebase Hosting Deploy
+        run: |
+            firebase deploy --only hosting --token ${{ secrets.FIREBASE_AUTH_TOKEN }}
