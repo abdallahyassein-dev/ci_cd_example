@@ -45,8 +45,15 @@ jobs:
           path: build/app/outputs/flutter-apk/app-release.apk
         
 
-      # Step 6: Upload APK to Firebase
+      # Step 6: Install Firebase CLI
+      - name: Install Firebase CLI
+        run: |
+          curl -sL https://firebase.tools | bash
+          firebase --version  # Check Firebase CLI installation
+
+      # Step 7: Deploy APK to Firebase App Distribution
       - name: Deploy to Firebase App Distribution
-        run: firebase appdistribution:distribute build/app/outputs/flutter-apk/app-release.apk \
-              --app testsignin-1a319 \
-              --token ${{ secrets.FIREBASE_AUTH_TOKEN }}
+        run: |
+          firebase appdistribution:distribute build/app/outputs/flutter-apk/app-release.apk \
+            --app testsignin-1a319 \
+            --token ${{ secrets.FIREBASE_AUTH_TOKEN }}
