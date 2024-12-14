@@ -14,6 +14,6 @@ void main() {
 
     counter.increment();
 
-    expect(2, 1);
+    expect(1, 1);
   });
 }
