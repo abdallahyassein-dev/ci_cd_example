@@ -42,8 +42,8 @@ jobs:
       - name: Debug - Check Service Account Key
         run: |
           echo "Checking Firebase Service Account Key..."
-          echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}" | head -n 10  # Avoid printing entire key
-          echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}" > /tmp/firebase-service-account.json
+          echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" | head -n 10  # Avoid printing entire key
+          echo "${{ secrets.FIREBASE_AUTH_TOKEN }}" > /tmp/firebase-service-account.json
           ls -l /tmp/firebase-service-account.json  # Check file exists
           cat /tmp/firebase-service-account.json  # Ensure file content is correct
 
