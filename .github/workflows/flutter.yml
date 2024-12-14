@@ -40,13 +40,12 @@ jobs:
           curl -sL https://firebase.tools | bash
           firebase --version  # Check Firebase CLI installation
 
-      - name: Authenticate with Firebase using Service Account Key
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: /tmp/firebase-service-account.json
+      - name: Set up Firebase Authentication
         run: |
-          echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" > /tmp/firebase-service-account.json
-          firebase --token ${{ secrets.FIREBASE_AUTH_TOKEN }} # Try logging in using token (optional but sometimes needed)
-
+            echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" > /tmp/firebase-service-account.json
+            export GOOGLE_APPLICATION_CREDENTIALS="/tmp/firebase-service-account.json"
+            firebase --token ${{ secrets.FIREBASE_AUTH_TOKEN }} # Optional if you use a CI token
+  
 
       - name: Build APK
         run: flutter build apk --release
