@@ -34,34 +34,13 @@ jobs:
       - name: Run Our Test
         run: flutter test
 
-      - name: Install Firebase CLI
-        run: |
-          curl -sL https://firebase.tools | bash
-          firebase --version  # Ensure Firebase CLI is installed
+      - name: Build APK
+        run: flutter build apk --release
 
-      - name: Verify Firebase Service Account File
-        run: |
-            echo "Checking Firebase Service Account Key..."
-            echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}" > /tmp/firebase-service-account.json
-            ls -l /tmp/firebase-service-account.json  # Check file permissions
-            cat /tmp/firebase-service-account.json    # Ensure file content is correct
-  
-      - name: Check if Firebase Auth Token is Set
-        run: |
-             if [ -z "${{ secrets.FIREBASE_AUTH_TOKEN }}" ]; then
-                echo "Firebase Auth Token is not set!"
-              else
-                echo "Firebase Auth Token is set."
-              fi
-      - name: Authenticate Firebase CLI
-        run: |
-            export GOOGLE_APPLICATION_CREDENTIALS="/tmp/firebase-service-account.json"
-            firebase auth:use --token ${{ secrets.FIREBASE_AUTH_TOKEN }}  # Authenticate manually
-  
-      - name: Check Firebase Authentication
-        run: |
-            firebase projects:list  # Check if Firebase authentication works
-  
-      - name: Firebase Hosting Deploy
-        run: |
-            firebase deploy --only hosting --token ${{ secrets.FIREBASE_AUTH_TOKEN }}
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+      
