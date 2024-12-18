@@ -64,16 +64,17 @@ jobs:
         run: |
           curl -sL https://firebase.tools | bash
 
-          - name: Authenticate with Firebase
-          env:
-            GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-          run: |
-            firebase --version  # Ensure Firebase CLI is installed correctly
-  
-        # Step 11: Upload IPA to Firebase App Distribution
+      # Step 10: Authenticate with Firebase using Service Account Key
+      - name: Authenticate with Firebase
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+        run: |
+          firebase --version  # Ensure Firebase CLI is installed correctly
+
+      # Step 11: Upload IPA to Firebase App Distribution
       - name: Upload to Firebase App Distribution
         run: |
-            firebase appdistribution:distribute build/ios/ipa/app.ipa \
-              --app ${{ secrets.IOS_APP_ID }} \
-              --groups testers \
-              --token "${{ secrets.FIREBASE_CLI_TOKEN }}"
+          firebase appdistribution:distribute build/ios/ipa/app.ipa \
+            --app ${{ secrets.IOS_APP_ID }} \
+            --groups testers \
+            --token "${{ secrets.FIREBASE_CLI_TOKEN }}"
