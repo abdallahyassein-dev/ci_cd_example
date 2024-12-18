@@ -61,7 +61,7 @@ jobs:
 
       - name: Check IPA location
         run: |
-          ls -R build/ios/archive
+          ls -R build/ios/iphoneos
 
       # Step 9: Install Firebase CLI
       - name: Install Firebase CLI
