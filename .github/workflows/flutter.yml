@@ -74,7 +74,7 @@ jobs:
       # Step 11: Upload IPA to Firebase App Distribution
       - name: Upload to Firebase App Distribution
         run: |
-          firebase appdistribution:distribute build/ios/ipa/app.ipa \
+          firebase appdistribution:distribute build/ios/iphoneos/Runner.ipa \
             --app ${{ secrets.IOS_APP_ID }} \
             --groups testers \
-            --token "${{ secrets.FIREBASE_CLI_TOKEN }}"
+            --token "${{ secrets.FIREBASE_AUTH_TOKEN }}"
