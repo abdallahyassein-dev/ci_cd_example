@@ -13,5 +13,7 @@
             <key>com.mustasem.cicd</key>
             <string>test</string>
         </dict>
+		<key>destination</key>
+  		<string>export</string>
     </dict>
 </plist>
