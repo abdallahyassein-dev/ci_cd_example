@@ -5,47 +5,52 @@ on:
     branches:
       - main
       - publish_to_firebase
-     
+      - ios_branch
   pull_request:
     branches:
       - main
       - publish_to_firebase
-
+      - ios_branch
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  build-ios:
+    runs-on: macos-latest
 
     steps:
-      - name: Checkout My Code 
+      # Step 1: Checkout code
+      - name: Checkout My Code
         uses: actions/checkout@v3
 
-      - name: Setup Java 17
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin' # Use the Eclipse Temurin distribution
-          java-version: '17'
-
+      # Step 2: Set up Flutter
       - name: Install Flutter Version 3.24.5
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.24.5' # Use the required Flutter version
 
+      # Step 3: Install Dependencies
       - name: Install Dependencies
         run: flutter pub get
 
+      # Step 4: Run Tests
       - name: Run Our Test
         run: flutter test
 
-      - name: Build APK
-        run: flutter build apk --release
-      - run: ls build/app/outputs/flutter-apk
+      # Step 5: Install Cocoapods
+      - name: Install CocoaPods
+        run: |
+          brew install cocoapods
+          pod install --project-directory=ios
 
+      # Step 6: Build iOS App
+      - name: Build IPA
+        run: |
+          flutter build ipa --release \
+          --export-options-plist=ios/ExportOptions.plist
 
-      - name: Upload artifact to Firebase App Distribution
+      # Step 7: Upload artifact to Firebase App Distribution
+      - name: Upload to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
-          appId: ${{secrets.APP_ID}} 
+          appId: ${{secrets.IOS_APP_ID}} 
           serviceCredentialsFileContent: ${{secrets.GOOGLE_APPLICATION_CREDENTIALS}}
           groups: testers
-          file: build/app/outputs/flutter-apk/app-release.apk
-      
+          file: build/ios/ipa/app.ipa
