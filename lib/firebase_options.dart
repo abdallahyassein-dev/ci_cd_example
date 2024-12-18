@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBvo6bvNfTRLLoSs7zY1eDllnbljqckAtM',
-    appId: '1:937281614957:android:7e8c8babbb470098e0bb64',
+    appId: '1:937281614957:android:aa77982c6caa4e09e0bb64',
     messagingSenderId: '937281614957',
     projectId: 'testsignin-1a319',
     storageBucket: 'testsignin-1a319.firebasestorage.app',
@@ -59,12 +59,13 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyB0guqdNoI7VSUnq5M8rRq0dVO_UgFj4t4',
-    appId: '1:937281614957:ios:a82edf76478ba654e0bb64',
+    appId: '1:937281614957:ios:03e74691b5626a89e0bb64',
     messagingSenderId: '937281614957',
     projectId: 'testsignin-1a319',
     storageBucket: 'testsignin-1a319.firebasestorage.app',
     androidClientId: '937281614957-54schs4c37t15f3b652npag34s8va2j3.apps.googleusercontent.com',
-    iosClientId: '937281614957-kaijtsluesjbn6gbu5i165k66b2ueubt.apps.googleusercontent.com',
-    iosBundleId: 'com.example.ciCdExample',
+    iosClientId: '937281614957-iqqdutsl6ofpvtviqt4nr4lte612kc1u.apps.googleusercontent.com',
+    iosBundleId: 'com.mustasem.cicd',
   );
+
 }
