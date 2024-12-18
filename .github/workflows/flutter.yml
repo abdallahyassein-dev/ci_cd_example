@@ -64,13 +64,18 @@ jobs:
         run: |
           curl -sL https://firebase.tools | bash
 
-      # Step 10: Authenticate with Firebase using Service Account Key
+      # Step 10: Set Firebase Project ID
+      - name: Set Firebase Project ID
+        run: |
+          firebase use --add --token "${{ secrets.FIREBASE_CLI_TOKEN }}" ${{ secrets.FIREBASE_PROJECT_ID }}
+
+      # Step 11: Authenticate with Firebase using Service Account Key
       - name: Authenticate with Firebase
         run: |
           echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" > $HOME/firebase_credentials.json
           firebase auth:import $HOME/firebase_credentials.json --token "${{ secrets.FIREBASE_CLI_TOKEN }}"
 
-      # Step 11: Upload IPA to Firebase App Distribution
+      # Step 12: Upload IPA to Firebase App Distribution
       - name: Upload to Firebase App Distribution
         run: |
           firebase appdistribution:distribute build/ios/ipa/app.ipa \
