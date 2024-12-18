@@ -59,6 +59,10 @@ jobs:
           flutter build ipa --release \
           --export-options-plist=ios/ExportOptions.plist --no-codesign
 
+      - name: Check IPA location
+        run: |
+          ls -R build/ios/ipa
+
       # Step 9: Install Firebase CLI
       - name: Install Firebase CLI
         run: |
