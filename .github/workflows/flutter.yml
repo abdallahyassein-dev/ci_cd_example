@@ -25,14 +25,14 @@ jobs:
       - name: Install Flutter Version 3.24.5
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.5' # Use the required Flutter version
+          flutter-version: '3.24.5'
 
       # Step 3: Install Dependencies
       - name: Install Dependencies
         run: flutter pub get
 
       # Step 4: Run Tests
-      - name: Run Our Test
+      - name: Run Tests
         run: flutter test
 
       # Step 5: Install CocoaPods
@@ -49,13 +49,17 @@ jobs:
           echo "${{ secrets.STAGING_BUILD_CERTIFICATE_BASE64 }}" | base64 --decode > ios_certificate.p12
           security import ios_certificate.p12 -P "${{ secrets.STAGING_P12_PASSWORD }}" -A
 
-      # Step 7: Build iOS App (IPA)
+      # Step 7: Clean the project (optional but can help with caching issues)
+      - name: Clean Flutter project
+        run: flutter clean
+
+      # Step 8: Build iOS App (IPA)
       - name: Build IPA
         run: |
           flutter build ipa --release \
-          --export-options-plist=ios/ExportOptions.plist
+          --export-options-plist=ios/ExportOptions.plist --no-codesign
 
-      # Step 8: Upload to Firebase App Distribution
+      # Step 9: Upload to Firebase App Distribution
       - name: Upload to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
@@ -63,4 +67,3 @@ jobs:
           serviceCredentialsFileContent: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
           groups: testers
           file: build/ios/ipa/app.ipa
-
