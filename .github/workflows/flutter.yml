@@ -56,8 +56,14 @@ jobs:
       # Step 8: Build iOS App (IPA)
       - name: Build IPA
         run: |
-         flutter build ipa --release \
-         --export-options-plist=ios/ExportOptions.plist
+          flutter build ipa --release \
+          --export-options-plist=ios/ExportOptions.plist \
+          --no-codesign
+          xcodebuild -workspace ios/Runner.xcworkspace \
+          -scheme Runner \
+          -configuration Release \
+          -archivePath build/ios/archive/Runner.xcarchive \
+          -allowProvisioningUpdates
 
       - name: Check IPA location
         run: |
