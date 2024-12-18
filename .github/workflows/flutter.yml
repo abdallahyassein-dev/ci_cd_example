@@ -77,4 +77,4 @@ jobs:
           firebase appdistribution:distribute build/ios/iphoneos/Runner.ipa \
             --app ${{ secrets.IOS_APP_ID }} \
             --groups testers \
-            --token "${{ secrets.FIREBASE_AUTH_TOKEN }}"
+            --token "${{ secrets.FIREBASE_CLI_TOKEN }}"
