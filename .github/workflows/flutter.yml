@@ -40,7 +40,13 @@ jobs:
           brew install cocoapods
           pod install --project-directory=ios
 
-          
+      - name: Setup Signing for iOS
+        run: |
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          echo "${{ secrets.STAGING_BUILD_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/profile.mobileprovision
+          echo "${{ secrets.STAGING_BUILD_CERTIFICATE_BASE64 }}" | base64 --decode > ios_certificate.p12
+          security import ios_certificate.p12 -P "${{ secrets.STAGING_P12_PASSWORD }}" -A
+  
 
       # Step 6: Build iOS App
       - name: Build IPA
