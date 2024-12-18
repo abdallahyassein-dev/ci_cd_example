@@ -59,11 +59,21 @@ jobs:
           flutter build ipa --release \
           --export-options-plist=ios/ExportOptions.plist --no-codesign
 
-      # Step 9: Upload to Firebase App Distribution
+      # Step 9: Install Firebase CLI
+      - name: Install Firebase CLI
+        run: |
+          curl -sL https://firebase.tools | bash
+
+      # Step 10: Authenticate with Firebase using Service Account Key
+      - name: Authenticate with Firebase
+        run: |
+          echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" > $HOME/firebase_credentials.json
+          firebase auth:import $HOME/firebase_credentials.json --token "${{ secrets.FIREBASE_CLI_TOKEN }}"
+
+      # Step 11: Upload IPA to Firebase App Distribution
       - name: Upload to Firebase App Distribution
-        uses: wzieba/Firebase-Distribution-Github-Action@v1
-        with:
-          appId: ${{ secrets.IOS_APP_ID }} 
-          serviceCredentialsFileContent: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-          groups: testers
-          file: build/ios/ipa/app.ipa
+        run: |
+          firebase appdistribution:distribute build/ios/ipa/app.ipa \
+            --app ${{ secrets.IOS_APP_ID }} \
+            --groups testers \
+            --token "${{ secrets.FIREBASE_CLI_TOKEN }}"
