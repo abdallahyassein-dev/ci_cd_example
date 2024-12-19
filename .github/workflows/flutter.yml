@@ -1,90 +1,36 @@
-name: Flutter CI/CD
+name: iOS Firebase Distribution
 
 on:
   push:
     branches:
       - main
-      - publish_to_firebase
-      - ios_branch
-  pull_request:
-    branches:
-      - main
-      - publish_to_firebase
-      - ios_branch
 
 jobs:
-  build-ios:
+  build-and-distribute:
     runs-on: macos-latest
 
     steps:
-      # Step 1: Checkout code
-      - name: Checkout My Code
+      - name: Checkout Repository
         uses: actions/checkout@v3
 
-      # Step 2: Set up Flutter
-      - name: Install Flutter Version 3.24.5
+      - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.5'
+          flutter-version: 'stable'
 
-      # Step 3: Install Dependencies
       - name: Install Dependencies
         run: flutter pub get
 
-      # Step 4: Run Tests
-      - name: Run Tests
-        run: flutter test
-
-      # Step 5: Install CocoaPods
-      - name: Install CocoaPods
+      - name: Install Fastlane
         run: |
-          brew install cocoapods
-          pod install --project-directory=ios
+          sudo gem install fastlane
+          bundle install
 
-      # Step 6: Setup Signing for iOS
-      - name: Setup Signing for iOS
+      - name: Build and Distribute
         run: |
-          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          echo "${{ secrets.STAGING_BUILD_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/profile.mobileprovision
-          echo "${{ secrets.STAGING_BUILD_CERTIFICATE_BASE64 }}" | base64 --decode > ios_certificate.p12
-          security import ios_certificate.p12 -P "${{ secrets.STAGING_P12_PASSWORD }}" -A
-
-      # Step 7: Clean the project (optional but can help with caching issues)
-      - name: Clean Flutter project
-        run: flutter clean
-
-      # Step 8: Build iOS App (IPA)
-      - name: Build IPA
-        run: |
-          flutter build ipa --release \
-          --export-options-plist=ios/ExportOptions.plist \
-          --no-codesign
-          xcodebuild -workspace ios/Runner.xcworkspace \
-          -scheme Runner \
-          -configuration Release \
-          -archivePath build/ios/archive/Runner.xcarchive \
-          -allowProvisioningUpdates
-
-      - name: Check IPA location
-        run: |
-          ls -R build/ios/
-
-      # Step 9: Install Firebase CLI
-      - name: Install Firebase CLI
-        run: |
-          curl -sL https://firebase.tools | bash
-
-      # Step 10: Authenticate with Firebase using Service Account Key
-      - name: Authenticate with Firebase
+          cd ios
+          bundle exec fastlane firebase_distribution
         env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-        run: |
-          firebase --version  # Ensure Firebase CLI is installed correctly
-
-      # Step 11: Upload IPA to Firebase App Distribution
-      - name: Upload to Firebase App Distribution
-        run: |
-          firebase appdistribution:distribute build/ios/iphoneos/Runner.ipa \
-            --app ${{ secrets.IOS_APP_ID }} \
-            --groups testers \
-            --token "${{ secrets.FIREBASE_CLI_TOKEN }}"
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_CLI_TOKEN }}
+          FIREBASE_APP_ID: ${{ secrets.IOS_APP_ID }}
+          TESTER_GROUPS: testers
