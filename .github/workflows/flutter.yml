@@ -3,7 +3,7 @@ name: iOS Firebase Distribution
 on:
   push:
     branches:
-      - main
+      - ios_branch
 
 jobs:
   build-and-distribute:
