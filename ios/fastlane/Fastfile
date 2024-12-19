@@ -23,7 +23,7 @@ platform :ios do
     firebase_app_distribution(
       app: ENV['IOS_APP_ID'], # Firebase App ID from GitHub Secrets
       ##testers: ENV['TESTER_EMAILS'], # Tester emails from GitHub Secrets
-      groups: ENV['TESTER_GROUPS'], # Tester groups from GitHub Secrets
+      groups: "testers", # Tester groups from GitHub Secrets
       release_notes: "Distributed via Fastlane and GitHub Actions" # Custom release notes
     )
   end
