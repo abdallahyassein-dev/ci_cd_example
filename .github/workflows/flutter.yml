@@ -43,10 +43,10 @@ jobs:
           bundler-cache: true
           working-directory: android
 
-      - name: Install Fastlane
-        run: |
-            bundle install
-        working-directory: android
+      # - name: Install Fastlane
+      #   run: |
+      #       bundle install
+      #   working-directory: android
 
       - name: Deploy to Firebase via Fastlane
         working-directory: android
