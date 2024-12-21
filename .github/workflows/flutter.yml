@@ -37,13 +37,7 @@ jobs:
         run: flutter test
 
 
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: "3.2.3"
-          bundler-cache: true
-          working-directory: android
-          
+
       - name: Deploy to Firebase via Fastlane
         env:
           FIREBASE_APP_ID: ${{ secrets.APP_ID }}
