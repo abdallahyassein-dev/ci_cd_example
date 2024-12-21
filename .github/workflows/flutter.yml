@@ -43,7 +43,11 @@ jobs:
           bundler-cache: true
           working-directory: android
 
-
+      - name: Install Fastlane and Plugins Locally
+        run: |
+            gem install fastlane --user-install
+            bundle install
+        working-directory: android
 
       - name: Deploy to Firebase via Fastlane
         env:
