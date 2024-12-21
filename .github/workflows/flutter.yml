@@ -55,6 +55,6 @@ jobs:
           FIREBASE_CLI_TOKEN: ${{ secrets.FIREBASE_CLI_TOKEN }}
         run: |
           cd android
-          bundle exec fastlane add_plugin firebase_app_distribution 
-          fastlane --verbose deploy_to_firebase
+          bundle exec fastlane deploy_to_firebase
+          
       
