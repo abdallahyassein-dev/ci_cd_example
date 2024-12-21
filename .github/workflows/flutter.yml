@@ -46,10 +46,11 @@ jobs:
 
       - name: Deploy to Firebase via Fastlane
         working-directory: android
-        run: echo "Firebase App ID: ${FIREBASE_APP_ID}"
+        
         env:
           FIREBASE_APP_ID: ${{ secrets.APP_ID }}
           FIREBASE_CLI_TOKEN: ${{ secrets.FIREBASE_CLI_TOKEN }}
+        
         run: |
           bundle exec fastlane deploy_to_firebase
           
