@@ -43,6 +43,12 @@ jobs:
           bundler-cache: true
           working-directory: android
 
+      - name: Install Fastlane Plugins
+        run: |
+            cd android
+            bundle install
+            fastlane install_plugins
+
       - name: Deploy to Firebase via Fastlane
         env:
           FIREBASE_APP_ID: ${{ secrets.APP_ID }}
