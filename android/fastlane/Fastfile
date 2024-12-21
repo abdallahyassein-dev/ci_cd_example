@@ -21,7 +21,7 @@ platform :android do
   lane  :deploy_to_firebase do
     sh "flutter build apk"
     firebase_app_distribution(
-      app: "1:937281614957:android:7e8c8babbb470098e0bb64" , # Replace with your Firebase Android app ID
+      app: ENV["FIREBASE_APP_ID"].strip, # Replace with your Firebase Android app ID
       groups: "testers",
       release_notes: "This Fastlane Build",
       firebase_cli_token: ENV["FIREBASE_CLI_TOKEN"].strip,
