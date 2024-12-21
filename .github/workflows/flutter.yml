@@ -47,7 +47,7 @@ jobs:
         run: |
             cd android
             bundle install
-            fastlane install_plugins
+            bundle exec fastlane install_plugins
 
       - name: Deploy to Firebase via Fastlane
         env:
@@ -55,5 +55,5 @@ jobs:
           FIREBASE_CLI_TOKEN: ${{ secrets.FIREBASE_CLI_TOKEN }}
         run: |
           cd android
-          fastlane deploy_to_firebase
+          bundle exec fastlane deploy_to_firebase
       
