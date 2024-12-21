@@ -39,7 +39,7 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: "2.7.2"
+          ruby-version: "3.3.6"
           bundler-cache: true
           working-directory: android
 
@@ -49,11 +49,11 @@ jobs:
         working-directory: android
 
       - name: Deploy to Firebase via Fastlane
+        working-directory: android
         env:
           FIREBASE_APP_ID: ${{ secrets.APP_ID }}
           FIREBASE_CLI_TOKEN: ${{ secrets.FIREBASE_CLI_TOKEN }}
         run: |
-          cd android
           bundle exec fastlane deploy_to_firebase
           
       
