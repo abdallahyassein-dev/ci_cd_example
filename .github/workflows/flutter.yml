@@ -36,6 +36,15 @@ jobs:
       - name: Run Our Test
         run: flutter test
 
+      - name: Set up Fastlane
+        run: |
+          curl -sL https://dl.fastlane.tools | bash
+          sudo gem install fastlane
+
+      - name: Install Firebase App Distribution plugin for Fastlane
+        run: |
+          fastlane add_plugin firebase_app_distribution
+
       - name: Deploy to Firebase via Fastlane
         env:
           FIREBASE_APP_ID: ${{ secrets.APP_ID }}
