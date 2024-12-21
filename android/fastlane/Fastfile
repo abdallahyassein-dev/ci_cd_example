@@ -19,7 +19,7 @@ default_platform(:android)
 platform :android do
   desc "Ditrube the app to Firebase App Distribution"
   lane  :deploy_to_firebase do
-    #sh "flutter build apk"
+    sh "flutter build apk"
     firebase_app_distribution(
       app: "1:937281614957:android:7e8c8babbb470098e0bb64", # Replace with your Firebase Android app ID
       groups: "testers",
